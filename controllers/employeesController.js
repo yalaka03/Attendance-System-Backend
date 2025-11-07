@@ -107,7 +107,7 @@ const getlist = async (req,res) =>
     }
     query["e_company_reg"]= req.companyId
     console.log(query)
-    Employee.find(query,{"e_id" : 1 ,"e_fname" :1 , "e_lname" :1 , "e_building" : 1, "isActive" : 1 , "e_company_name" : 1,"e_contact" :1 }).sort([["isActive",-1],["e_id",1]]).skip((page-1)*num_records_page).limit(num_records_page)
+    Employee.find(query,{"e_id" : 1 ,"e_fname" :1 , "e_lname" :1 , "e_building" : 1, "isActive" : 1 , "e_company_name" : 1,"e_contact" :1 }).sort([["e_id",1]]).skip((page-1)*num_records_page).limit(num_records_page)
     .then((employees) => {
        return res.json(employees)
     })
@@ -287,7 +287,7 @@ const updateEmployee = async (req, res) => {
     }
 }
 const listAttendance = async (req, res) => {
-    if (!req?.companyId) return res.status(403).json({ message: 'No company access assigned' });
+    if (!req?.companyId && !req?.e_id) return res.status(403).json({ message: 'No company access assigned' });
     const { e_id, page = 1, num_records_page = 10 } = req.body;
     if (!e_id) return res.status(400).json({ message: 'e_id required' });
     try {
@@ -305,7 +305,7 @@ const listAttendance = async (req, res) => {
     }
 }
 const countAttendancePages = async (req, res) => {
-    if (!req?.companyId) return res.status(403).json({ message: 'No company access assigned' });
+    if (!req?.companyId && !req?.e_id) return res.status(403).json({ message: 'No company access assigned' });
     const { e_id, num_records_page = 10 } = req.body;
     if (!e_id) return res.status(400).json({ message: 'e_id required' });
     try {

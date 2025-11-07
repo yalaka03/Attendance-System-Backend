@@ -11,3 +11,21 @@ const connectDB = async () => {
 }
 
 module.exports = connectDB
+
+
+// db.getCollectionNames().forEach(function(collName) {
+//     print(`Copying ${collName}...`);
+//     const source = db.getCollection(collName);
+//     const docs = source.find().toArray();
+
+//     if (docs.length > 0) {
+//         const target = db.getSiblingDB("Facial_Recognition").getCollection(collName);
+//         target.insertMany(docs);
+//         print(`→ Inserted ${docs.length} documents into ${collName}`);
+//     } else {
+//         print(`→ Skipping ${collName} (no documents)`);
+//     }
+// });
+
+// mongodump --db test --out ./backups/myBackup/
+

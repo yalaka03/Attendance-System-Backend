@@ -2,6 +2,7 @@ const User = require('../model/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Company = require('../model/company');
+const Employee = require('../model/Employee');
 
 const handleLogin = async (req, res) => {
     const { user, pwd } = req.body;
@@ -22,13 +23,25 @@ const handleLogin = async (req, res) => {
         } catch (e) {
             // ignore company resolution errors; companyId remains null
         }
+        let userId = null;
+        try {
+            const user = await Employee.findOne({ e_username: foundUser.username }, { e_id: 1,e_company_reg : 1 }).lean();
+            console.log("user",user.e_id)
+            if (user) {
+                userId = user.e_id;
+                companyId = companyId || user.e_company_reg;
+            }
+        } catch (e) {
+            // ignore company resolution errors; companyId remains null
+        }
         // create JWTs
         const accessToken = jwt.sign(
             {
                 "UserInfo": {
                     "username": foundUser.username,
                     "roles": roles,
-                    "companyId": companyId
+                    "companyId": companyId,
+                    "e_id" : userId
                 }
             },
             process.env.ACCESS_TOKEN_SECRET,
